@@ -1,21 +1,19 @@
-name: Status Check
+name: Jenkins Checks
 on: [pull_request]
+
 jobs:
-  test-and-lint:
+  jenkins-check:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Trigger Jenkins Build
+      id: trigger-jenkins-build
+      uses: actions/github-script@v3
       with:
-         jenkins-url: 'http://52.14.62.107:8080/'
-         jenkins-user: 'admin'
-         jenkins-token: ${{ secrets.MYTOKEN }}
-         job-name: 'mul-br'
-    - name: Build and test
-      run: |
-        curl -X POST -u " 11dd4f8085055bba9af35e07a7f19501eb" http://52.14.62.107:8080/job/mul-br/ 
-      
-     
-      
-  
-    
+        github-token: ${{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
+ }}
+        script: |
+          const inputs = {
+            job: 'statuschecks',
+            serverUrl: 'http://52.14.62.107:8080/job/statuschecks/'
+          };
+          const response = await github.actions.createWorkflowDispatchEvent('jenkins-checks', inputs);
